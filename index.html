@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clínica Multi Imágenes — Diagnóstico por imágenes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF8E7;
+    --bg-alt:#F5EEDC;
+    --panel:#FFFFFF;
+    --ink:#333333;
+    --ink-soft:rgba(51,51,51,.68);
+    --deep:#1E293B;
+    --deep-2:#111826;
+    --teal:#5F8558;
+    --accent:#5F8558;
+    --accent-2:#4A6A45;
+    --accent-soft:#E9DDF7;
+    --sage:#A7C7A1;
+    --lavender:#E9DDF7;
+    --sky:#DBEAFE;
+    --line:#E4DCC2;
+    --radius-s:6px;
+    --radius-m:14px;
+    --font-head:'Fraunces', serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{ display:block; max-width:100%; }
+  a{ color:inherit; }
+  h1,h2,h3{
+    font-family:var(--font-head);
+    color:var(--deep);
+    margin:0 0 .4em 0;
+    font-weight:500;
+    line-height:1.12;
+  }
+  p{ margin:0 0 1em 0; color:var(--ink-soft); }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+  section{ padding:96px 0; }
+  .eyebrow{
+    font-family:var(--font-head);
+    font-style:italic;
+    color:var(--teal);
+    font-size:1.05rem;
+    margin-bottom:.3em;
+    display:block;
+  }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(242,244,241,.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; max-width:1180px; margin:0 auto;
+  }
+  .logo{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .logo-mark{ width:38px; height:38px; flex:none; }
+  .logo-text{ display:flex; flex-direction:column; line-height:1; }
+  .logo-text .clinica{ font-family:var(--font-head); font-style:italic; font-size:.72rem; color:var(--teal); }
+  .logo-text .nombre{ font-family:var(--font-head); font-weight:600; font-size:1.18rem; color:var(--deep); }
+  nav ul{ list-style:none; display:flex; gap:30px; margin:0; padding:0; }
+  nav ul a{
+    text-decoration:none; color:var(--ink); font-size:.95rem; font-weight:500;
+    padding-bottom:3px; border-bottom:1px solid transparent;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  nav ul a:hover{ border-color:var(--accent); color:var(--accent-2); }
+  .nav-actions{ display:flex; align-items:center; gap:16px; }
+  .phone-link{ font-size:.9rem; color:var(--ink-soft); text-decoration:none; display:none; }
+  .btn{
+    font-family:var(--font-body); font-weight:600; font-size:.92rem;
+    padding:11px 20px; border-radius:var(--radius-s); border:1px solid transparent;
+    cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    transition:transform .12s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--accent); color:#fff; }
+  .btn-primary:hover{ background:var(--accent-2); }
+  .btn-ghost{ background:transparent; color:var(--deep); border-color:var(--line); }
+  .btn-ghost:hover{ border-color:var(--deep); }
+  .menu-toggle{ display:none; background:none; border:none; cursor:pointer; padding:6px; }
+  .menu-toggle span{ display:block; width:22px; height:2px; background:var(--deep); margin:5px 0; }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:76px 0 90px; overflow:hidden; }
+  .hero .wrap{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
+  .hero h1{ font-size:clamp(2.3rem, 4vw, 3.4rem); max-width:11.5ch; }
+  .hero .lede{ font-size:1.1rem; max-width:46ch; }
+  .hero-ctas{ display:flex; gap:14px; margin:28px 0 40px; flex-wrap:wrap; }
+  .stat-row{ display:flex; gap:38px; flex-wrap:wrap; border-top:1px solid var(--line); padding-top:26px; }
+  .stat b{ display:block; font-family:var(--font-head); font-size:1.7rem; color:var(--deep); font-weight:600; }
+  .stat span{ font-size:.85rem; color:var(--ink-soft); }
+
+  .scan-figure{
+    position:relative; background:var(--deep);
+    border-radius:var(--radius-m);
+    aspect-ratio:1/1.05;
+    overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(20,33,42,.5);
+  }
+  .scan-grid{
+    position:absolute; inset:0;
+    background-image:
+      repeating-linear-gradient(to right, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 34px),
+      repeating-linear-gradient(to bottom, rgba(255,255,255,.06) 0, rgba(255,255,255,.06) 1px, transparent 1px, transparent 34px);
+  }
+  .scan-figure svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .scan-line{
+    position:absolute; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--sage), transparent);
+    box-shadow:0 0 18px 2px rgba(167,199,161,.65);
+    animation:sweep 4.5s ease-in-out infinite;
+  }
+  @keyframes sweep{
+    0%{ top:6%; opacity:0; }
+    8%{ opacity:1; }
+    50%{ top:92%; opacity:1; }
+    58%{ opacity:0; }
+    100%{ top:92%; opacity:0; }
+  }
+  .scan-caption{
+    position:absolute; left:20px; bottom:18px; color:rgba(219,234,254,.85); font-size:.78rem;
+    font-family:var(--font-body); letter-spacing:.02em;
+  }
+  .scan-caption b{ color:#fff; }
+
+  /* ---------- Servicios ---------- */
+  .servicios{ background:var(--bg-alt); }
+  .servicios-head{ max-width:60ch; margin-bottom:52px; }
+  .cards3{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  .service-card{
+    background:var(--panel); border-radius:var(--radius-m); padding:30px 26px;
+    border:1px solid var(--line);
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .service-icon{ width:44px; height:44px; }
+  .service-card h3{ font-size:1.25rem; }
+  .service-card ul{ margin:6px 0 0; padding-left:18px; color:var(--ink-soft); font-size:.92rem; }
+  .service-card li{ margin-bottom:4px; }
+
+  /* ---------- Calculadora ---------- */
+  .calculadora .wrap{ display:grid; grid-template-columns:.9fr 1.4fr; gap:48px; align-items:start; }
+  .calc-intro{ position:sticky; top:110px; }
+  .calc-intro p.small{ font-size:.85rem; color:var(--ink-soft); border-left:2px solid var(--accent); padding-left:14px; margin-top:26px; }
+
+  .calc-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-m);
+    padding:32px; box-shadow:0 24px 48px -36px rgba(20,33,42,.35);
+  }
+  .grupo-titulo{
+    font-family:var(--font-head); font-size:1.1rem; font-weight:600; color:var(--deep);
+    background:var(--bg-alt); padding:10px 14px; border-radius:var(--radius-s);
+    margin:26px 0 8px;
+  }
+  .grupo-titulo.primero{ margin-top:0; }
+
+  .estudio{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:11px 4px; border-bottom:1px solid var(--line); font-size:.94rem;
+  }
+  .nombre-estudio{ display:flex; align-items:center; }
+  .nombre-estudio input[type="checkbox"]{
+    width:18px; height:18px; margin-right:10px; accent-color:var(--accent); cursor:pointer; flex:none;
+  }
+  .precio-estudio{ color:var(--accent); font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .zona-botones{ display:flex; gap:12px; margin:26px 0 22px; flex-wrap:wrap; }
+
+  .lista-elegidos{
+    font-size:.88rem; color:var(--sage); line-height:1.7; margin-bottom:14px;
+    padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,.14);
+  }
+
+  .calc-total{
+    background:var(--deep); color:#fff; border-radius:var(--radius-m); padding:24px 26px; margin-top:6px;
+  }
+  .calc-total .row{ display:flex; justify-content:space-between; font-size:.92rem; padding:5px 0; color:rgba(219,234,254,.8); }
+  .calc-total .row.total{
+    color:#fff; font-family:var(--font-head); font-size:1.5rem; padding-top:14px; margin-top:8px;
+    border-top:1px solid rgba(255,255,255,.18); font-weight:600;
+  }
+  .calc-note{ font-size:.78rem; color:var(--ink-soft); margin-top:16px; }
+
+  /* ---------- Por qué elegirnos ---------- */
+  .porque .wrap{ display:grid; grid-template-columns:.8fr 1.2fr; gap:56px; }
+  .feature-list{ display:flex; flex-direction:column; gap:26px; }
+  .feature{ display:flex; gap:16px; }
+  .feature-num{
+    font-family:var(--font-head); font-style:italic; color:var(--teal); font-size:1.3rem; flex:none; width:34px;
+  }
+  .feature h3{ font-size:1.08rem; margin-bottom:4px; }
+
+  /* ---------- FAQ ---------- */
+  .faq{ background:var(--bg-alt); }
+  .faq-head{ max-width:60ch; margin-bottom:44px; }
+  .faq-item{ border-bottom:1px solid var(--line); }
+  .faq-item summary{
+    cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center;
+    padding:20px 2px; font-weight:600; color:var(--deep); font-size:1rem;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary::after{ content:'+'; font-size:1.4rem; color:var(--accent); font-weight:400; }
+  .faq-item[open] summary::after{ content:'–'; }
+  .faq-item p{ padding-bottom:20px; max-width:70ch; }
+
+  /* ---------- Contacto ---------- */
+  .contacto .wrap{ display:grid; grid-template-columns:1fr 1fr; gap:56px; }
+  .contact-panel{
+    background:var(--deep); color:#fff; border-radius:var(--radius-m); padding:40px;
+  }
+  .contact-panel h2{ color:#fff; }
+  .contact-panel p{ color:rgba(219,234,254,.8); }
+  .contact-list{ list-style:none; padding:0; margin:26px 0 0; display:flex; flex-direction:column; gap:16px; }
+  .contact-list li{ display:flex; gap:12px; font-size:.95rem; }
+  .contact-list b{ display:block; color:#fff; }
+  .map-block{
+    border-radius:var(--radius-m); border:1px solid var(--line); background:var(--bg-alt);
+    display:flex; align-items:center; justify-content:center; min-height:100%;
+    padding:40px;
+  }
+  .map-pin{ display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--deep); }
+  .map-pin span{ font-size:1rem; font-weight:600; color:var(--deep); text-align:center; max-width:22ch; }
+
+  footer{ border-top:1px solid var(--line); padding:36px 0; }
+  footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  footer p{ margin:0; font-size:.85rem; color:var(--ink-soft); }
+
+  @media (max-width: 900px){
+    nav ul{ display:none; }
+    .menu-toggle{ display:block; }
+    .hero .wrap, .calculadora .wrap, .porque .wrap, .contacto .wrap{ grid-template-columns:1fr; }
+    .cards3{ grid-template-columns:1fr; }
+    .calc-intro{ position:static; }
+    section{ padding:64px 0; }
+    .scan-figure{ aspect-ratio:16/10; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="#inicio">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1" y="1" width="38" height="38" rx="9" fill="#1E293B"/>
+        <path d="M9 20a11 11 0 0 1 22 0" stroke="#A7C7A1" stroke-width="2" fill="none"/>
+        <line x1="6" y1="26" x2="34" y2="26" stroke="#A7C7A1" stroke-width="2"/>
+        <circle cx="20" cy="14" r="3" fill="#E9DDF7"/>
+      </svg>
+      <span class="logo-text">
+        <span class="clinica">Clínica de diagnóstico</span>
+        <span class="nombre">Multi Imágenes</span>
+      </span>
+    </a>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#calculadora">Calculadora</a></li>
+        <li><a href="#porque">Nosotros</a></li>
+        <li><a href="#faq">Preguntas</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a class="phone-link" href="tel:+50277672140">7767-2140</a>
+      <a class="btn btn-primary" href="#contacto">Agendar cita</a>
+      <button class="menu-toggle" aria-label="Abrir menú" id="menuToggle"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Radiografía · Tomografía · Ultrasonido obstétrico</span>
+        <h1>Vemos lo que el ojo no alcanza a ver</h1>
+        <p class="lede">Estudios de imagen con equipo digital de última generación, radiólogos certificados y protocolos especiales de cuidado para pacientes embarazadas.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#calculadora">Calcular precio de mi estudio</a>
+          <a class="btn btn-ghost" href="#servicios">Ver servicios</a>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><b>+18 años</b><span>de experiencia en imagenología</span></div>
+          <div class="stat"><b>+40,000</b><span>estudios realizados</span></div>
+          <div class="stat"><b>24 hrs</b><span>entrega de resultados</span></div>
+        </div>
+      </div>
+      <div class="scan-figure" role="img" aria-label="Ilustración de un escaneo diagnóstico">
+        <div class="scan-grid"></div>
+        <svg viewBox="0 0 300 320" aria-hidden="true">
+          <ellipse cx="150" cy="70" rx="34" ry="40" fill="none" stroke="#4A5E76" stroke-width="1.5"/>
+          <path d="M100 120 Q150 105 200 120 L212 280 Q150 300 88 280 Z" fill="none" stroke="#4A5E76" stroke-width="1.5"/>
+          <line x1="150" y1="120" x2="150" y2="280" stroke="#33455A" stroke-width="1"/>
+          <circle cx="150" cy="185" r="26" fill="none" stroke="#A7C7A1" stroke-width="1.4" opacity="0.7"/>
+        </svg>
+        <div class="scan-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="servicios" id="servicios">
+    <div class="wrap">
+      <div class="servicios-head">
+        <span class="eyebrow">Nuestros servicios</span>
+        <h2>Tres áreas de diagnóstico, un mismo estándar de precisión</h2>
+        <p>Cada estudio se realiza con protocolos ajustados a la condición del paciente, e informes interpretados por radiólogos certificados.</p>
+      </div>
+      <div class="cards3">
+        <div class="service-card">
+          <svg class="service-icon" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="8" fill="#F5F5F5"/><path d="M14 30V18a8 8 0 0 1 16 0v12" stroke="#1E293B" stroke-width="2"/><line x1="10" y1="32" x2="34" y2="32" stroke="#A7C7A1" stroke-width="2"/></svg>
+          <h3>Radiografía digital</h3>
+          <p>Estudios simples de tórax, columna, extremidades, abdomen y cráneo con baja dosis de radiación.</p>
+          <ul>
+            <li>Resultado interpretado el mismo día</li>
+            <li>Equipo digital de baja dosis</li>
+            <li>Ideal para control traumatológico</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <svg class="service-icon" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="8" fill="#F5F5F5"/><circle cx="22" cy="22" r="12" stroke="#1E293B" stroke-width="2"/><circle cx="22" cy="22" r="4" fill="#E9DDF7"/></svg>
+          <h3>Tomografía (TAC)</h3>
+          <p>Cortes de alta resolución para cráneo, tórax, abdomen, pelvis y columna, con y sin contraste.</p>
+          <ul>
+            <li>Reconstrucción 3D disponible</li>
+            <li>Medio de contraste supervisado por médico</li>
+            <li>Entrega de imágenes en formato digital</li>
+          </ul>
+        </div>
+        <div class="service-card">
+          <svg class="service-icon" viewBox="0 0 44 44" fill="none"><rect x="4" y="4" width="36" height="36" rx="8" fill="#F5F5F5"/><path d="M22 32c-6-5-10-9-10-14a7 7 0 0 1 10-6 7 7 0 0 1 10 6c0 5-4 9-10 14Z" stroke="#1E293B" stroke-width="2"/><circle cx="22" cy="17" r="2.2" fill="#DBEAFE"/></svg>
+          <h3>Ultrasonido para embarazadas</h3>
+          <p>Seguimiento del embarazo por trimestre con equipo sin radiación, seguro para la madre y el bebé.</p>
+          <ul>
+            <li>Primer trimestre, estructural y 3D/4D</li>
+            <li>Doppler obstétrico</li>
+            <li>Acompañante permitido en la sala</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULADORA -->
+  <section class="calculadora" id="calculadora">
+    <div class="wrap">
+      <div class="calc-intro">
+        <span class="eyebrow">Calculadora de precios</span>
+        <h2>Estima el costo de tus estudios</h2>
+        <p>Marca todos los estudios que necesitas. Puedes seleccionar más de uno y el total se suma automáticamente.</p>
+        <p class="small">Los precios son referenciales en quetzales (Q) y pueden variar según indicación médica del radiólogo. La cotización final se confirma al agendar tu cita.</p>
+      </div>
+
+      <div class="calc-card">
+
+        <div class="grupo-titulo primero">Radiografías</div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="rx1" value="150" onchange="calcular()">
+            Radiografía de tórax
+          </div>
+          <div class="precio-estudio">Q150.00</div>
+        </div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="rx2" value="220" onchange="calcular()">
+            Radiografía de columna
+          </div>
+          <div class="precio-estudio">Q220.00</div>
+        </div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="rx3" value="180" onchange="calcular()">
+            Radiografía de extremidad
+          </div>
+          <div class="precio-estudio">Q180.00</div>
+        </div>
+
+        <div class="grupo-titulo">Tomografías</div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="tc1" value="950" onchange="calcular()">
+            Tomografía de cráneo
+          </div>
+          <div class="precio-estudio">Q950.00</div>
+        </div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="tc2" value="1200" onchange="calcular()">
+            Tomografía de tórax
+          </div>
+          <div class="precio-estudio">Q1200.00</div>
+        </div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="tc3" value="2100" onchange="calcular()">
+            Tomografía de abdomen
+          </div>
+          <div class="precio-estudio">Q2100.00</div>
+        </div>
+
+        <div class="grupo-titulo">Ultrasonidos para embarazadas</div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="us1" value="350" onchange="calcular()">
+            Ultrasonido primer trimestre
+          </div>
+          <div class="precio-estudio">Q350.00</div>
+        </div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="us2" value="550" onchange="calcular()">
+            Ultrasonido estructural
+          </div>
+          <div class="precio-estudio">Q550.00</div>
+        </div>
+
+        <div class="estudio">
+          <div class="nombre-estudio">
+            <input type="checkbox" id="us3" value="750" onchange="calcular()">
+            Ultrasonido 3D / 4D
+          </div>
+          <div class="precio-estudio">Q750.00</div>
+        </div>
+
+        <div class="zona-botones">
+          <button class="btn btn-primary" onclick="calcular()">Calcular total</button>
+          <button class="btn btn-ghost" onclick="limpiar()">Limpiar</button>
+        </div>
+
+        <div class="calc-total">
+          <div class="lista-elegidos" id="elegidos">No has seleccionado ningún estudio.</div>
+          <div class="row"><span>Cantidad de estudios</span><span id="cantidad">0</span></div>
+          <div class="row total"><span>Total a pagar</span><span id="total">Q0.00</span></div>
+        </div>
+
+        <p class="calc-note">Precios sujetos a cambio sin previo aviso. No incluyen honorarios médicos adicionales cuando el estudio requiere valoración especializada.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ ELEGIRNOS -->
+  <section class="porque" id="porque">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Sobre la clínica</span>
+        <h2>Diagnóstico claro, cuidado cercano</h2>
+        <p>En Multi Imágenes combinamos tecnología de imagenología con un trato humano, especialmente pensado para pacientes en control de embarazo y personas que llegan con dolor o preocupación.</p>
+      </div>
+      <div class="feature-list">
+        <div class="feature">
+          <span class="feature-num">01</span>
+          <div><h3>Radiólogos certificados</h3><p>Cada estudio es interpretado y firmado por un médico radiólogo colegiado.</p></div>
+        </div>
+        <div class="feature">
+          <span class="feature-num">02</span>
+          <div><h3>Protocolos de baja radiación</h3><p>Ajustamos la dosis según edad, peso y condición del paciente, priorizando siempre la seguridad.</p></div>
+        </div>
+        <div class="feature">
+          <span class="feature-num">03</span>
+          <div><h3>Atención especial a embarazadas</h3><p>Salas dedicadas a ultrasonido obstétrico, sin exposición a radiación ionizante.</p></div>
+        </div>
+        <div class="feature">
+          <span class="feature-num">04</span>
+          <div><h3>Entrega rápida de resultados</h3><p>Informe médico e imágenes disponibles en menos de 24 horas, con opción urgente.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <div class="faq-head">
+        <span class="eyebrow">Preguntas frecuentes</span>
+        <h2>Antes de tu cita</h2>
+      </div>
+      <details class="faq-item" open>
+        <summary>¿Es seguro un ultrasonido durante el embarazo?</summary>
+        <p>Sí. El ultrasonido no utiliza radiación ionizante, por lo que es el método de imagen preferido para el seguimiento del embarazo en cualquier trimestre.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Puedo hacerme una radiografía o tomografía si estoy embarazada?</summary>
+        <p>Solo cuando el médico tratante lo considera indispensable y no existe otra alternativa diagnóstica. En esos casos se usan protecciones especiales y se ajusta la dosis al mínimo necesario.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Necesito alguna preparación previa?</summary>
+        <p>Depende del estudio. Algunas tomografías con contraste requieren ayuno de 4 horas; el equipo te confirmará las indicaciones al agendar tu cita.</p>
+      </details>
+      <details class="faq-item">
+        <summary>¿Cuánto tiempo tarda el resultado?</summary>
+        <p>La mayoría de los informes están listos en 24 horas; el servicio de entrega urgente reduce ese tiempo a aproximadamente una hora.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contacto" id="contacto">
+    <div class="wrap">
+      <div class="contact-panel">
+        <span class="eyebrow" style="color:#A7C7A1;">Contacto</span>
+        <h2>Agenda tu estudio</h2>
+        <p>Escríbenos o llámanos y te ayudamos a elegir el estudio correcto según la indicación de tu médico.</p>
+        <ul class="contact-list">
+          <li>📍 <div><b>Dirección</b>0 Calle 4-99, Zona 9, Quetzaltenango</div></li>
+          <li>📞 <div><b>Teléfono</b>7767-2140 / 7767-1836</div></li>
+          <li>✉️ <div><b>Correo</b>citas@multiimagenes.gt</div></li>
+          <li>🕘 <div><b>Horario</b>Lunes a viernes 7:00 am – 6:00 pm · Sábados 8:00 am – 12:00 pm</div></li>
+        </ul>
+        <a class="btn btn-primary" style="margin-top:26px;" href="tel:+50277672140">Llamar ahora</a>
+      </div>
+      <div class="map-block">
+        <div class="map-pin">
+          <span>0 Calle 4-99, Zona 9, Quetzaltenango</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Clínica Multi Imágenes. Todos los derechos reservados.</p>
+    <p>Sitio de referencia — precios y datos de contacto de ejemplo.</p>
+  </div>
+</footer>
+
+<script>
+  // Menú móvil simple
+  const menuToggle = document.getElementById('menuToggle');
+  const navList = document.querySelector('nav ul');
+  menuToggle.addEventListener('click', () => {
+    const showing = navList.style.display === 'flex';
+    navList.style.display = showing ? 'none' : 'flex';
+    navList.style.flexDirection = 'column';
+    navList.style.position = 'absolute';
+    navList.style.top = '64px';
+    navList.style.left = '0';
+    navList.style.right = '0';
+    navList.style.background = '#FFF8E7';
+    navList.style.padding = '18px 28px';
+    navList.style.borderBottom = '1px solid #E4DCC2';
+  });
+
+  // ---------- Calculadora de precios ----------
+
+  // Lista con los identificadores de todos los estudios
+  var listaIds = ["rx1", "rx2", "rx3", "tc1", "tc2", "tc3", "us1", "us2", "us3"];
+
+  function calcular() {
+
+    var total = 0;
+    var cantidad = 0;
+    var nombres = "";
+
+    // Se recorre uno por uno para ver cuáles están marcados
+    for (var i = 0; i < listaIds.length; i++) {
+
+      var casilla = document.getElementById(listaIds[i]);
+
+      if (casilla.checked == true) {
+
+        // El precio está guardado en el atributo value
+        var precio = parseFloat(casilla.value);
+
+        // Suma normal
+        total = total + precio;
+        cantidad = cantidad + 1;
+
+        // Se toma el texto que está junto a la casilla
+        var nombre = casilla.parentElement.innerText;
+        nombres = nombres + "&bull; " + nombre + "<br>";
+      }
+    }
+
+    // Se muestran los resultados en pantalla
+    document.getElementById("cantidad").innerHTML = cantidad;
+    document.getElementById("total").innerHTML = "Q" + total.toFixed(2);
+
+    if (cantidad == 0) {
+      document.getElementById("elegidos").innerHTML = "No has seleccionado ningún estudio.";
+    } else {
+      document.getElementById("elegidos").innerHTML = nombres;
+    }
+  }
+
+
+  function limpiar() {
+
+    // Se desmarcan todas las casillas
+    for (var i = 0; i < listaIds.length; i++) {
+      document.getElementById(listaIds[i]).checked = false;
+    }
+
+    calcular();
+  }
+
+  calcular();
+</script>
+
+</body>
+</html>
